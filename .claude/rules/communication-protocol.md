@@ -7,7 +7,7 @@ description: All task routing goes through the Commander with peer messaging res
 
 ## Applicability
 
-- Applies to: All agents (`commander`, `investigator-alpha`, `investigator-beta`, `debate-analyst-pro`, `debate-analyst-con`, `tech-assessor`, `quality-inspector`, `report-producer`)
+- Applies to: All agents (`requirements-analyst`, `commander`, `investigator-alpha`, `investigator-beta`, `debate-analyst-pro`, `debate-analyst-con`, `tech-assessor`, `quality-inspector`, `report-producer`)
 
 ## Rule Content
 
@@ -15,9 +15,18 @@ description: All task routing goes through the Commander with peer messaging res
 
 All task assignments must go through the Commander. Agents must not assign tasks to each other. Only the Commander may create tasks with an `owner` field or update task ownership via TaskUpdate.
 
+### Phase 0: Requirements Discovery
+
+The Requirements Analyst is the sole active agent during Phase 0. Rules:
+- The Requirements Analyst communicates directly with the user via `AskUserQuestion` to conduct the stakeholder interview.
+- Upon completing the Research Brief, the Requirements Analyst sends a completion message to the Commander via `SendMessage`.
+- The Commander must not create tasks for any other agent or begin Phase 1 until the Research Brief is delivered and reviewed.
+- If the Commander identifies gaps in the Research Brief, it sends the Requirements Analyst back to the requester for targeted follow-up questions.
+
 ### Peer-to-Peer Messaging Rules
 
-Peer-to-peer messaging via SendMessage is allowed only in Phase 4:
+Peer-to-peer messaging via SendMessage is allowed only in:
+- Phase 0: Requirements Analyst → Commander (Research Brief delivery and follow-up)
 - Phase 4: Debate Analyst Pro ↔ Debate Analyst Con (during multi-round debate)
 
 All other inter-agent communication must route through the Commander. Do not send direct messages to agents in a different phase.
@@ -55,3 +64,6 @@ The Commander determines when the debate concludes (minimum 1 full round: openin
 - An agent completes a task and marks it done via TaskUpdate but does not send a completion summary to the Commander → Violation
 - An agent assigns a task to another agent by updating the task's owner field → Violation (only Commander may assign)
 - Commander advances to Phase 3 while a Phase 2 task is still in progress → Violation
+- Commander begins dimension planning before the Requirements Analyst delivers the Research Brief → Violation
+- Requirements Analyst sends messages to agents other than the Commander → Violation
+- Any agent other than the Requirements Analyst contacts the user for requirements clarification without Commander routing → Violation

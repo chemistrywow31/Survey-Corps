@@ -34,8 +34,9 @@ All agents share a single task list managed by the Commander. Agents must:
 ## Workflow Phases
 
 ```
-Phase 1: Intake & Planning          → Commander receives topic, selects research dimensions
-Phase 2: Data Collection (parallel) → Investigator Alpha ∥ Investigator Beta
+Phase 0: Requirements Discovery      → Requirements Analyst interviews requester, produces Research Brief
+Phase 1: Intake & Planning           → Commander receives Research Brief, selects research dimensions
+Phase 2: Data Collection (parallel)  → Investigator Alpha ∥ Investigator Beta
 Phase 3: Independent Analysis        → Debate Analyst Pro ∥ Debate Analyst Con
 Phase 4: Multi-Round Debate          → Pro ↔ Con (Commander moderates, minimum 1 full round)
 Phase 5: Technical Assessment        → Tech Assessor
