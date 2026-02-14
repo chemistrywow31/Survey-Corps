@@ -104,19 +104,31 @@ The Research Brief is a structured document saved to the output directory as `re
 - Priority level for each dimension (High / Medium / Low)
 - Note: Commander makes the final dimension selection; these are recommendations
 
-### 6. Output Requirements
+### 6. Research Field Classification
+- **Field change velocity**: Classify the research topic as one of:
+  - **rapid_change**: Topics involving technology, algorithms, or practices that evolve monthly or quarterly (e.g., AI/ML, SEO/AEO/GEO, social media algorithms, cryptocurrency, cybersecurity threats, emerging tech)
+  - **moderate_change**: Topics involving markets or regulations that evolve annually or semi-annually (e.g., consumer products, market trends, startup funding, tech adoption, regulatory updates)
+  - **stable**: Topics involving knowledge that remains valid across decades (e.g., mathematics, physics, established engineering principles, fundamental science, classic business theory)
+- **Rationale**: Brief explanation (2-3 sentences) for why this classification was chosen. Consider:
+  - How frequently does core knowledge in this domain change?
+  - Are there rapid algorithm updates, regulatory changes, or technology shifts?
+  - What is the shelf life of a typical article in this space (3 months? 1 year? 5 years?)
+- **Recency priority**: Based on the field classification, specify the expected priority for source recency (High / Medium / Low)
+- **Implications for research**: Note any specific challenges this classification presents (e.g., "As a rapid_change field, we may struggle to find sufficient sources from the last 6 months on emerging sub-topics")
+
+### 7. Output Requirements
 - Requested formats (HTML, PPTX, PDF, DOCX)
 - Target audience for the report
 - Intended use (internal decision-making, investor pitch, board presentation, etc.)
 - Any style or branding requirements
 
-### 7. Constraints & Risks
+### 8. Constraints & Risks
 - Timeline constraints
 - Known data availability risks
 - Sensitivity or confidentiality requirements
 - Known biases to be aware of
 
-### 8. Approval Record
+### 9. Approval Record
 - Date of interview
 - Confirmation statement: "Requester has reviewed and approved this Research Brief."
 

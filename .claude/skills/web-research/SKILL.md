@@ -27,13 +27,45 @@ The Commander assigns specific dimensions to each Investigator. Do not investiga
 
 ### Step 2: Search Strategy Per Dimension
 
-For each assigned dimension, execute a minimum of 3 search queries using WebSearch:
+**IMPORTANT**: Search queries must enforce recency requirements based on the research field type (rapid_change, moderate_change, or stable). The Commander will specify the field type in the dimension assignment.
+
+#### For Rapid Change Fields (AI, SEO, social media algorithms, crypto, etc.)
+
+Execute these queries in order (minimum 4 queries):
+
+1. **Current year focus**: `"{topic} {dimension} {current_year}"`
+2. **Recent trends**: `"{topic} {dimension} latest trends {current_year}"`
+3. **Data-focused**: `"{topic} {dimension} statistics data {current_year}"`
+4. **Expert opinion**: `"{topic} {dimension} analysis expert {current_year}"`
+
+**Recency requirement**: At least 70% of sources must be published within the last 6 months. Do NOT use sources older than 12 months unless no alternatives exist (document this in Data Gaps).
+
+#### For Moderate Change Fields (consumer products, market trends, etc.)
+
+Execute these queries in order (minimum 3 queries):
 
 1. **Broad query**: `"{topic} {dimension} market research {current_year}"`
-2. **Data-focused query**: `"{topic} {dimension} statistics data report"`
-3. **Expert opinion query**: `"{topic} {dimension} analysis expert forecast"`
+2. **Data-focused**: `"{topic} {dimension} statistics report {current_year} OR {last_year}"`
+3. **Expert opinion**: `"{topic} {dimension} forecast analysis {current_year}"`
 
-Refine queries based on initial results. Add industry-specific terms discovered in early results to subsequent queries.
+**Recency requirement**: At least 60% of sources must be published within the last 12 months. Avoid sources older than 24 months.
+
+#### For Stable Fields (mathematics, fundamental science, engineering principles)
+
+Execute these queries in order (minimum 3 queries):
+
+1. **Broad query**: `"{topic} {dimension} research review"`
+2. **Data-focused query**: `"{topic} {dimension} data analysis"`
+3. **Expert opinion query**: `"{topic} {dimension} expert analysis"`
+
+**Recency requirement**: No strict time constraint, but prefer sources from the last 5 years when available.
+
+#### Query Refinement
+
+After initial results, refine queries by:
+- Adding industry-specific terms discovered in early results
+- Including specific company, product, or technology names mentioned in high-quality sources
+- Combining multiple dimensions if initial results are sparse
 
 ### Step 3: Source Collection
 
@@ -41,10 +73,19 @@ For each relevant search result:
 1. Use WebFetch to retrieve the full content.
 2. Extract key data points, statistics, and expert opinions.
 3. Record the source metadata (URL, title, author, publication, date).
-4. Apply the Source Verification skill to assess credibility.
-5. Add the verified source to the Source Registry.
+4. **Classify the field type** (rapid_change, moderate_change, or stable) based on the research topic.
+5. Apply the Source Verification skill to assess credibility using the appropriate recency rubric for the field type.
+6. Add the verified source to the Source Registry with the field_type field populated.
 
-Collect a minimum of 5 verified sources per dimension. If fewer than 5 credible sources (rating Medium or above) are found, document this in the Data Gaps section.
+**Minimum source requirements**:
+- Collect a minimum of 5 verified sources (rating Medium or above) per dimension.
+- For rapid_change fields: Ensure at least 70% of sources are within the last 6 months.
+- For moderate_change fields: Ensure at least 60% of sources are within the last 12 months.
+
+If these requirements cannot be met, document this in the Data Gaps section with specific details:
+- How many recent sources were found
+- Why older sources were necessary
+- What search queries were attempted
 
 ### Step 4: Cross-Validation
 

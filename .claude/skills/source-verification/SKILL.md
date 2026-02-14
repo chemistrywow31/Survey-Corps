@@ -33,15 +33,49 @@ Evaluate each source against these four dimensions:
 
 ### 3. Recency
 
+**IMPORTANT**: Recency scoring varies by research field type. First classify the research topic, then apply the appropriate scoring rubric.
+
+#### Field Classification
+
+| Field Type | Examples | Rationale |
+|---|---|---|
+| **Rapid Change** | AI/ML, SEO/AEO/GEO, social media algorithms, cryptocurrency, cybersecurity threats, emerging tech | Technology, algorithms, or practices that evolve monthly or quarterly |
+| **Moderate Change** | Consumer products, market trends, startup funding, tech adoption, regulatory updates | Markets or regulations that evolve annually or semi-annually |
+| **Stable** | Mathematics, physics, established engineering principles, fundamental science, classic business theory | Knowledge that remains valid across decades |
+
+#### Recency Scoring by Field Type
+
+**For Rapid Change fields** (AI, SEO, social media algorithms, crypto, etc.):
+
+| Score | Definition |
+|---|---|
+| 5 | Published within the last 3 months |
+| 4 | Published within the last 6 months |
+| 3 | Published within the last 9 months |
+| 2 | Published within the last 12 months |
+| 1 | Published more than 12 months ago, or no publication date available |
+
+**For Moderate Change fields** (consumer products, market analysis, tech adoption, etc.):
+
 | Score | Definition |
 |---|---|
 | 5 | Published within the last 6 months |
-| 4 | Published within the last 1 year |
-| 3 | Published within the last 2 years |
-| 2 | Published within the last 5 years |
-| 1 | Published more than 5 years ago, or no publication date available |
+| 4 | Published within the last 12 months |
+| 3 | Published within the last 18 months |
+| 2 | Published within the last 24 months |
+| 1 | Published more than 24 months ago, or no publication date available |
 
-Adjust recency expectations based on topic: for fast-moving fields (AI, cybersecurity), prioritize sources within the last 12 months. For stable domains (mathematics, established engineering principles), older sources remain valid.
+**For Stable fields** (mathematics, fundamental science, engineering principles, etc.):
+
+| Score | Definition |
+|---|---|
+| 5 | Published within the last 12 months |
+| 4 | Published within the last 24 months |
+| 3 | Published within the last 36 months |
+| 2 | Published within the last 60 months |
+| 1 | Published more than 60 months ago, or no publication date available |
+
+**Field classification guidance**: When in doubt, classify the research topic as Rapid Change if it involves technology that has seen significant updates in the past year. Record the field classification in the source's notes field.
 
 ### 4. Corroboration
 
@@ -55,7 +89,29 @@ Adjust recency expectations based on topic: for fast-moving fields (AI, cybersec
 
 ## Overall Credibility Score
 
-Calculate the overall credibility score as the average of the four dimension scores, rounded to one decimal place.
+Calculate the overall credibility score using weighted averages based on field type. The weights reflect the relative importance of each dimension for that field.
+
+### Calculation Formula by Field Type
+
+**For Rapid Change fields** (AI, SEO, social media algorithms, crypto, etc.):
+```
+Overall = (Author Authority × 0.15) + (Publication Reputation × 0.15) + (Recency × 0.50) + (Corroboration × 0.20)
+```
+*Rationale: In fast-moving fields, outdated information is worse than no information. Recency is paramount.*
+
+**For Moderate Change fields** (consumer products, market analysis, tech adoption, etc.):
+```
+Overall = (Author Authority × 0.20) + (Publication Reputation × 0.20) + (Recency × 0.35) + (Corroboration × 0.25)
+```
+*Rationale: Recency matters, but expert analysis and corroboration provide essential context.*
+
+**For Stable fields** (mathematics, fundamental science, engineering principles, etc.):
+```
+Overall = (Author Authority × 0.25) + (Publication Reputation × 0.25) + (Recency × 0.25) + (Corroboration × 0.25)
+```
+*Rationale: Timeless knowledge values all dimensions equally.*
+
+Round the overall score to one decimal place.
 
 | Overall Score | Rating | Usage Guidance |
 |---|---|---|
@@ -87,12 +143,13 @@ author: "{author name or 'Unknown'}"
 publication: "{outlet name}"
 date_published: "{YYYY-MM-DD or 'Unknown'}"
 date_accessed: "{YYYY-MM-DD}"
+field_type: "{rapid_change|moderate_change|stable}"  # NEW: required field for weighted scoring
 credibility:
   author_authority: {1-5}
   publication_reputation: {1-5}
   recency: {1-5}
   corroboration: {1-5}
-  overall: {calculated average, 1 decimal}
+  overall: {calculated weighted score, 1 decimal}
   rating: "{High|Medium|Low|Reject}"
 key_claims:
   - claim: "{factual claim extracted from source}"
@@ -119,7 +176,9 @@ Verify the credibility of this source for research on "Electric Vehicle Battery 
 
 5. **Corroboration**: Core claim: "Lithium supply deficit projected at 500,000 tonnes by 2030." Corroborated by: (a) IEA Global EV Outlook report (SRC-005), (b) S&P Global Commodity Insights analysis (SRC-008). Score: **4**.
 
-6. **Calculate overall**: (4 + 5 + 5 + 4) / 4 = **4.5**. Rating: **High**.
+6. **Classify field type**: "Electric Vehicle Battery Market" is a moderate change field (emerging technology with annual updates). Field type: **moderate_change**.
+
+7. **Calculate overall**: Using moderate_change weights: (4 × 0.20) + (5 × 0.20) + (5 × 0.35) + (4 × 0.25) = 0.8 + 1.0 + 1.75 + 1.0 = **4.55** → rounded to **4.6**. Rating: **High**.
 
 ### Output
 
@@ -131,12 +190,13 @@ author: "Sarah Chen"
 publication: "Bloomberg"
 date_published: "2025-09-12"
 date_accessed: "2026-02-11"
+field_type: "moderate_change"
 credibility:
   author_authority: 4
   publication_reputation: 5
   recency: 5
   corroboration: 4
-  overall: 4.5
+  overall: 4.6
   rating: "High"
 key_claims:
   - claim: "Lithium supply deficit projected at 500,000 tonnes by 2030"
