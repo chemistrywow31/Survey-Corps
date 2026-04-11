@@ -7,7 +7,7 @@ description: Multi-round debate must follow structured argument format with evid
 
 ## Applicability
 
-- Applies to: `commander`, `debate-analyst-pro`, `debate-analyst-con`
+- Applies to: `levi`, `eren`, `armin`
 
 ## Rule Content
 
@@ -15,12 +15,12 @@ description: Multi-round debate must follow structured argument format with evid
 
 Every debate must consist of at least 1 full round. Each round contains these stages in order:
 
-1. **Pro Opening** — Debate Analyst Pro presents the affirmative case with evidence.
-2. **Con Rebuttal** — Debate Analyst Con responds to Pro's arguments and presents counterarguments.
-3. **Pro Counter-rebuttal** — Debate Analyst Pro addresses Con's rebuttal and reinforces key points.
-4. **Con Closing** — Debate Analyst Con delivers final counterarguments and summary.
+1. **Eren Opening** — Eren presents the affirmative case with evidence.
+2. **Armin Rebuttal** — Armin responds to Eren's arguments and presents counterarguments.
+3. **Eren Counter-rebuttal** — Eren addresses Armin's rebuttal and reinforces key points.
+4. **Armin Closing** — Armin delivers final counterarguments and summary.
 
-The Commander may authorize additional rounds if unresolved points remain after Round 1.
+Levi may authorize additional rounds if unresolved points remain after Round 1.
 
 ### Argument Format
 
@@ -34,15 +34,15 @@ Each debate submission (opening, rebuttal, counter-rebuttal, closing) must conta
 
 ### Intellectual Honesty
 
-Debate analysts must:
+Eren and Armin must:
 - Argue their assigned stance vigorously, but must not fabricate evidence or misrepresent sources.
 - Acknowledge strong opposing arguments rather than ignoring them.
 - Distinguish between established facts, expert consensus, and speculative projections.
 - Label any inference not directly supported by cited evidence as "Analyst inference."
 
-### Commander Moderation Duties
+### Levi's Moderation Duties
 
-The Commander must:
+Levi must:
 - Review each debate submission before the next stage proceeds.
 - Flag submissions that lack required evidence citations and return them for revision.
 - Declare the debate concluded only when both sides have completed at least 1 full round and no critical unaddressed arguments remain.
@@ -51,17 +51,17 @@ The Commander must:
 ### File Naming for Debate Records
 
 All debate submissions must be saved as files in the output directory:
-- `round-{N}-pro-opening.md`
-- `round-{N}-con-rebuttal.md`
-- `round-{N}-pro-counter.md`
-- `round-{N}-con-closing.md`
-- `debate-summary.md` (produced by Commander after debate concludes)
+- `round-{N}-eren-opening.md`
+- `round-{N}-armin-rebuttal.md`
+- `round-{N}-eren-counter.md`
+- `round-{N}-armin-closing.md`
+- `debate-summary.md` (produced by Levi after debate concludes)
 
 ## Violation Determination
 
-- Debate Analyst submits an argument with zero Source Registry citations → Violation
-- Debate Analyst fabricates a source not present in the Source Registry → Violation
-- Commander allows Phase 5 to start before the debate has completed at least 1 full round → Violation
+- Eren or Armin submits an argument with zero Source Registry citations → Violation
+- Eren or Armin fabricates a source not present in the Source Registry → Violation
+- Levi allows Phase 5 to start before the debate has completed at least 1 full round → Violation
 - Debate submission missing the Stance Declaration or Risk Assessment section → Violation
 - Rebuttal or closing stage does not contain at least one Concession → Violation
-- Commander does not produce a Debate Summary after the debate concludes → Violation
+- Levi does not produce a Debate Summary after the debate concludes → Violation

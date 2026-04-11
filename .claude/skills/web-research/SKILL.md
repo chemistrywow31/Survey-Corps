@@ -23,69 +23,53 @@ Break the research topic into distinct investigation dimensions. Common dimensio
 | Financial Indicators | Funding trends, revenue models, pricing benchmarks |
 | Risk Factors | Market risks, technology risks, regulatory risks, execution risks |
 
-The Commander assigns specific dimensions to each Investigator. Do not investigate dimensions outside your assignment.
+Levi assigns specific dimensions to each investigator (Hange or Moblit). Do not investigate dimensions outside your assignment.
 
-### Step 2: Search Strategy Per Dimension
+### Step 2: Search Strategy Per Dimension (Time-Bounded)
 
-**IMPORTANT**: Search queries must enforce recency requirements based on the research field type (rapid_change, moderate_change, or stable). The Commander will specify the field type in the dimension assignment.
+Every search query must be time-bounded. The exact time bound depends on the topic's **field classification** from Levi's task dispatch.
 
-#### For Rapid Change Fields (AI, SEO, social media algorithms, crypto, etc.)
+| Field Classification | Required time bound in queries | Acceptable recency in results |
+|---|---|---|
+| `rapid_change` | `{current_year}` and `{current_year - 1}` only | Age ≤ 12 months (target ≤ 6) |
+| `moderate_change` | `{current_year}` and `{current_year - 1}` | Age ≤ 24 months (target ≤ 12) |
+| `stable` | `{current_year}` or `{current_year - 1}`, fallback to no bound | Age ≤ 60 months |
 
-Execute these queries in order (minimum 4 queries):
+**Required queries** (execute all three for each dimension):
 
-1. **Current year focus**: `"{topic} {dimension} {current_year}"`
-2. **Recent trends**: `"{topic} {dimension} latest trends {current_year}"`
-3. **Data-focused**: `"{topic} {dimension} statistics data {current_year}"`
-4. **Expert opinion**: `"{topic} {dimension} analysis expert {current_year}"`
+1. **Broad (current year)**: `"{topic} {dimension} {current_year}"`
+2. **Broad (last year)**: `"{topic} {dimension} {current_year - 1}"`
+3. **Data-focused (time-bounded)**: `"{topic} {dimension} statistics report {current_year}"`
 
-**Recency requirement**: At least 70% of sources must be published within the last 6 months. Do NOT use sources older than 12 months unless no alternatives exist (document this in Data Gaps).
+**Supplemental queries** (execute if the three required queries return fewer than 5 credible sources):
 
-#### For Moderate Change Fields (consumer products, market trends, etc.)
+4. `"{topic} {dimension} latest {current_year}"`
+5. `"{topic} {dimension} recent update"` (no year — use only as last resort)
+6. `"{topic} {dimension} quarterly report {current_year}"` (for financial / market topics)
 
-Execute these queries in order (minimum 3 queries):
+**Forbidden queries**:
 
-1. **Broad query**: `"{topic} {dimension} market research {current_year}"`
-2. **Data-focused**: `"{topic} {dimension} statistics report {current_year} OR {last_year}"`
-3. **Expert opinion**: `"{topic} {dimension} forecast analysis {current_year}"`
+- Unbounded general queries without a year for `rapid_change` or `moderate_change` topics
+- Queries that explicitly reference years older than `{current_year - 1}` unless the goal is historical baseline data
+- Reusing a query identical to a prior one without refinement
 
-**Recency requirement**: At least 60% of sources must be published within the last 12 months. Avoid sources older than 24 months.
+Refine queries based on initial results. Add industry-specific terms discovered in early results to subsequent queries. When refining, keep the year bound intact.
 
-#### For Stable Fields (mathematics, fundamental science, engineering principles)
+### Step 2b: Pre-Search Field Classification Check
 
-Execute these queries in order (minimum 3 queries):
-
-1. **Broad query**: `"{topic} {dimension} research review"`
-2. **Data-focused query**: `"{topic} {dimension} data analysis"`
-3. **Expert opinion query**: `"{topic} {dimension} expert analysis"`
-
-**Recency requirement**: No strict time constraint, but prefer sources from the last 5 years when available.
-
-#### Query Refinement
-
-After initial results, refine queries by:
-- Adding industry-specific terms discovered in early results
-- Including specific company, product, or technology names mentioned in high-quality sources
-- Combining multiple dimensions if initial results are sparse
+Before executing any query, confirm Levi's task dispatch contains `<field_classification>`. If it is missing or unclear, return `NEEDS_CONTEXT` immediately. Do not guess the classification — the recency threshold cascades into source scoring, evidence dossier warnings, and QA gates, and a wrong classification corrupts all of them.
 
 ### Step 3: Source Collection
 
 For each relevant search result:
 1. Use WebFetch to retrieve the full content.
-2. Extract key data points, statistics, and expert opinions.
-3. Record the source metadata (URL, title, author, publication, date).
-4. **Classify the field type** (rapid_change, moderate_change, or stable) based on the research topic.
-5. Apply the Source Verification skill to assess credibility using the appropriate recency rubric for the field type.
-6. Add the verified source to the Source Registry with the field_type field populated.
+2. **Confirm the publication date is within the required horizon** for the field classification. Discard results older than the cutoff unless they are foundational-methodology papers (document the justification in `notes`).
+3. Extract key data points, statistics, and expert opinions.
+4. Record the source metadata (URL, title, author, publication, date).
+5. Apply the Source Verification skill to assess credibility using the field-aware recency table and weighted overall formula.
+6. Add the verified source to the Source Registry.
 
-**Minimum source requirements**:
-- Collect a minimum of 5 verified sources (rating Medium or above) per dimension.
-- For rapid_change fields: Ensure at least 70% of sources are within the last 6 months.
-- For moderate_change fields: Ensure at least 60% of sources are within the last 12 months.
-
-If these requirements cannot be met, document this in the Data Gaps section with specific details:
-- How many recent sources were found
-- Why older sources were necessary
-- What search queries were attempted
+Collect a minimum of 5 verified sources per dimension. If fewer than 5 credible sources (rating Medium or above) are found within the required recency horizon, document this in the Data Gaps section — do not silently substitute older sources to fill the quota.
 
 ### Step 4: Cross-Validation
 
@@ -100,28 +84,39 @@ Compile findings into the Evidence Dossier format defined in the Evidence Standa
 
 ## Search Query Templates
 
+All templates below include a `{current_year}` placeholder that must be substituted before search.
+
 ### Market Size Research
 
 ```
-"{industry} market size {year}" → WebSearch
-"{industry} TAM SAM revenue forecast" → WebSearch
-"{industry} market report {consulting_firm}" → WebSearch (e.g., Gartner, McKinsey, Statista)
+"{industry} market size {current_year}" → WebSearch
+"{industry} TAM SAM revenue forecast {current_year}" → WebSearch
+"{industry} market report {consulting_firm} {current_year}" → WebSearch (e.g., Gartner, McKinsey, Statista)
 ```
 
 ### Competitive Analysis
 
 ```
-"{industry} competitive landscape top companies" → WebSearch
-"{competitor_name} market share revenue" → WebSearch
-"{industry} startup funding recent" → WebSearch
+"{industry} competitive landscape top companies {current_year}" → WebSearch
+"{competitor_name} market share revenue {current_year}" → WebSearch
+"{industry} startup funding {current_year}" → WebSearch
 ```
 
 ### Technology Assessment
 
 ```
-"{technology} adoption rate enterprise {year}" → WebSearch
-"{technology} vs {alternative} comparison" → WebSearch
-"{technology} maturity Gartner hype cycle" → WebSearch
+"{technology} adoption rate enterprise {current_year}" → WebSearch
+"{technology} vs {alternative} comparison {current_year}" → WebSearch
+"{technology} maturity Gartner hype cycle {current_year}" → WebSearch
+```
+
+### Rapid-Change Topics (AI / SEO / Social Algos / Crypto)
+
+```
+"{topic} {current_year}" → WebSearch
+"{topic} update {current_month} {current_year}" → WebSearch
+"{topic} latest changes {current_year}" → WebSearch
+"{platform} algorithm update {current_year}" → WebSearch
 ```
 
 ## Example
@@ -162,4 +157,35 @@ Assigned dimension: Market Size & Growth
 
 - Limited data on SMB adoption rates (most reports focus on enterprise).
 - No credible source found for churn rates of chatbot implementations.
+```
+
+### Edge Case — Sparse Results
+
+Input: Research topic "Quantum Computing in Agricultural Supply Chain Optimization", assigned dimension: Market Size & Growth.
+
+Research Process:
+1. **Broad query**: WebSearch for "quantum computing agriculture supply chain market size 2026" — returns 0 relevant results.
+2. **Refined query**: WebSearch for "quantum computing supply chain optimization market" — returns 2 results, both from vendor whitepapers (credibility capped at 3).
+3. **Adjacent query**: WebSearch for "quantum computing enterprise market size" — returns 3 credible results for the broader quantum computing market, but none specific to agriculture.
+
+Action: Report the data gap. Include the 2 broader quantum computing market sources with a note that agriculture-specific data is unavailable. Document all 6 attempted queries in the Data Gaps section.
+
+Output (Evidence Dossier excerpt):
+```markdown
+## Data Gaps — Market Size & Growth
+
+- No credible source found for quantum computing applications specifically in agricultural supply chain. Queries attempted: [list all 6 queries].
+- Broader quantum computing enterprise market data available from [SRC-001, SRC-002] but cannot be directly extrapolated to the agriculture vertical.
+- Recommend: Levi consider removing this dimension or broadening it to "Quantum Computing in Supply Chain" (all industries).
+```
+
+### Rejection Case — No Research Topic Provided
+
+Input: Hange or Moblit receives dimension assignment "Market Size & Growth" but no research topic is specified in Levi's dispatch.
+
+Action: Return `NEEDS_CONTEXT` immediately. Do not execute any search queries without a defined research topic.
+
+Output:
+```
+NEEDS_CONTEXT: Research topic not specified in task dispatch. Received dimension assignment "Market Size & Growth" but cannot construct search queries without the research topic. Provide the research topic (e.g., "AI-powered customer service chatbots") to proceed.
 ```
