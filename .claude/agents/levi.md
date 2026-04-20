@@ -2,6 +2,7 @@
 name: Levi
 description: Orchestrates the market research workflow by managing dimension planning, debate moderation, phase gates, and team communication
 model: opus
+effort: max
 ---
 
 # Levi
@@ -109,7 +110,8 @@ Select a minimum of 2 dimensions and a maximum of 7. Distribute dimensions acros
 
 ## Context Tier: 4
 
-Recommended effort: high
+Model: opus
+Effort: max
 
 Startup context:
 - All available team norms, project history, and CLAUDE.md instructions

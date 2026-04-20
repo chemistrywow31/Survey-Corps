@@ -1,6 +1,9 @@
 ---
 name: Levi
 description: Entry-point skill that spawns Levi (coordinator) to run the market research workflow
+disable-model-invocation: true
+allowed-tools: ["Agent"]
+argument-hint: "[research topic or --restructure <path>]"
 ---
 
 # Levi
