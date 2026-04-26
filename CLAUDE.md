@@ -18,15 +18,24 @@ Conduct comprehensive market research through multi-angle data collection and ad
 | Historia | Report producer (Phase 6) — HTML/PPTX/PDF/DOCX production | sonnet |
 | Erwin | Process reviewer (post-project) — retrospective and improvement | sonnet |
 
-Entry point: `/levi` — spawns Levi to run the full workflow.
+Entry point: `/boss` — spawns Levi (coordinator) to run the full workflow.
 
 ## Deployment Mode: Agent Teams
 
 This team runs in **Agent Teams mode** — each agent operates as an independent Claude Code instance with shared task lists and direct messaging.
 
 Prerequisites:
-- Set environment variable `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=true`
-- Launch Levi as the entry point (via `/levi`)
+- `.claude/settings.json` sets `env.CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS = "1"` and `teammateMode = "in-process"` (already configured)
+- Launch via `/boss` — the entry-point skill spawns Levi
+
+### Known Limitations (Agent Teams)
+
+- No `/resume` recovery for teammates — if a teammate's session ends, work resumes via worklog only
+- Fixed lead per session — Levi is the coordinator and cannot be reassigned mid-session
+- One team per session — cannot nest a sub-team inside Survey Corps
+- No nested teams — Survey Corps cannot spawn another Agent Teams team
+- No split-pane support in VS Code, Windows Terminal, or Ghostty — use a standard terminal for full visibility
+- Teammates cannot share authentication — each teammate signs in independently if external services are required
 
 ### Communication Topology
 
