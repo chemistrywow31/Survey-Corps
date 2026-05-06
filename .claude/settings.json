@@ -28,8 +28,6 @@
       "Bash(rm *)",
       "Bash(git push *)",
       "Bash(git commit *)",
-      "Write",
-      "Edit",
       "Agent"
     ],
     "deny": [
