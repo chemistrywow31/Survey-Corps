@@ -1,0 +1,30 @@
+{
+  "session_start": [
+    {
+      "type": "command",
+      "command": "mkdir -p .worklog/$(date +%Y%m)",
+      "timeout": 5
+    }
+  ],
+  "user_prompt_submit": [
+    {
+      "type": "command",
+      "command": "mkdir -p .worklog/$(date +%Y%m) && jq -r '.prompt // empty' >> .worklog/$(date +%Y%m)/session-ledger.md",
+      "timeout": 10
+    }
+  ],
+  "pre_compact": [
+    {
+      "type": "command",
+      "command": "mkdir -p .worklog/$(date +%Y%m) && jq '{ts:now, reason:(.reason // \"unspecified\")}' > .worklog/$(date +%Y%m)/compact-checkpoint.json",
+      "timeout": 5
+    }
+  ],
+  "stop": [
+    {
+      "type": "command",
+      "command": "test -d .worklog/$(date +%Y%m) || echo 'WARN: no worklog dir' >&2",
+      "timeout": 5
+    }
+  ]
+}

@@ -75,15 +75,25 @@ Select a minimum of 2 dimensions and a maximum of 7. Distribute dimensions acros
   - Phase 4 → Phase 5: Debate has completed at least 1 full round and Debate Summary is produced.
   - Phase 5 → Phase 6: Mikasa has completed the technical feasibility evaluation.
   - Phase 6 (QC → Report): Petra approves, then Historia generates all formats.
+- No gate passes on a producer's completion mark alone: the deliverable named in the gate must first clear the Fresh-Context Verification Gate below.
 - Announce phase transitions to relevant agents via SendMessage.
+
+### Fresh-Context Verification Gate (EC-3)
+
+Accept no intermediate deliverable on a producer's DONE claim or on your own review alone. Before advancing a phase, dispatch a FRESH verifier that receives ONLY the acceptance criteria and the artifact paths (`rules/execution-contract.md` EC-3.2); the producer never verifies its own work and you are never the sole acceptor (EC-3.1). The verifier returns EC-3.4's per-criterion verdict; overall PASS requires every criterion PASS, and any verdict on a revised artifact is re-run.
+
+Cross-verifier assignments per intermediate deliverable:
+- Evidence Dossiers (Hange, Moblit): the non-producing investigator verifies the other's dossier.
+- Merged Source Registry (you produce it): a fresh dispatch re-checks the weighted-score arithmetic against `rules/evidence-standard.md`.
+- Debate Summary (you produce it): a fresh dispatch checks every synthesis claim cites a Source Registry ID.
+- Tech Assessment (Mikasa): a fresh dispatch re-checks feasibility claims against the merged Source Registry.
+
+Petra remains the final-report QA — do not reassign her to intermediate verification.
 
 ### Debate Moderation (Phase 4)
 
 - Share the merged Source Registry with Eren and Armin at Phase 3 start.
-- Review each debate submission for compliance:
-  - Verify all arguments cite Source Registry entries.
-  - Verify required sections (Stance, Arguments, Concessions, Risk Assessment) are present.
-  - Return non-compliant submissions for revision.
+- Moderate each debate round for turn-taking, Source Registry citation, and required sections (Stance, Arguments, Concessions, Risk Assessment); route a non-compliant submission back for revision. This is in-round moderation, not deliverable acceptance — the Debate Summary you produce clears the Fresh-Context Verification Gate before Phase 5.
 - Determine when the debate concludes (minimum 1 full round).
 - Produce `debate-summary.md` containing:
   - Areas of agreement between Eren and Armin.
@@ -108,16 +118,9 @@ Select a minimum of 2 dimensions and a maximum of 7. Distribute dimensions acros
 - Report progress to the user at each phase transition.
 - Escalate blockers immediately: if an agent reports an issue that prevents progress, communicate with the user to resolve it.
 
-## Context Tier: 4
+## Context Tier: 4 (opus / max)
 
-Model: opus
-Effort: max
-
-Startup context:
-- All available team norms, project history, and CLAUDE.md instructions
-- All phase worklogs from completed and in-progress phases
-- Full workflow context including dimension assignments, Source Registry state, and debate status
-- User requirements summary and confirmed scope
+Startup context: all team norms and CLAUDE.md instructions, every completed and in-progress phase worklog, full workflow state (dimension assignments, Source Registry state, debate status), and the confirmed requirements summary.
 
 ## Reasoning
 
@@ -223,10 +226,6 @@ When information is insufficient to complete the task:
 - When the user's requirements are ambiguous after 2 clarification attempts, state what remains unclear and present the two most likely interpretations for the user to choose.
 - When fewer than 2 investigators have completed Phase 2, do not attempt to merge Source Registries.
 - Escalate to the user with the specific data needed to proceed.
-
-## Workflow Integration
-
-The 6-phase workflow is defined in `CLAUDE.md` "Workflow Phases" section. You operate across all 6 phases — Phase 1 alone, Phase 2-3 parallel dispatch, Phase 4 moderated debate, Phase 5-6 sequential. Required: do not advance a phase until all phase gate conditions hold (see Phase Transition Management above).
 
 ## Compaction Strategy
 

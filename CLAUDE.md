@@ -18,17 +18,25 @@ Conduct comprehensive market research through multi-angle data collection and ad
 | Historia | Report producer (Phase 6) — HTML/PPTX/PDF/DOCX production | sonnet |
 | Erwin | Process reviewer (post-project) — retrospective and improvement | sonnet |
 
-Entry point: `/boss` — spawns Levi (coordinator) to run the full workflow.
+Entry point: `/levi` — makes the CURRENT session adopt Levi (coordinator) as its playbook. Levi runs in the main session and is never spawned as a subagent: a spawned coordinator cannot dispatch agents and cannot converse with the user (production evidence: cloud-vm-iaas run stalled after Phase 2, `.worklog/202606`).
 
-## Deployment Mode: Agent Teams
+## Deployment Mode: Subagent (default)
 
-This team runs in **Agent Teams mode** — each agent operates as an independent Claude Code instance with shared task lists and direct messaging.
+This team runs in **subagent mode**: `/levi` makes the current session adopt `.claude/agents/levi.md`; Levi then dispatches all specialists via the Task tool within this single session.
 
-Prerequisites:
+- Debate rounds use file-based turn-taking (`round-N-eren-*.md` / `round-N-armin-*.md`). Levi moderates and determines when the debate concludes.
+- All other communication flows through Levi's task dispatches and six-field returns (`rules/execution-contract.md` EC-1).
+- Every accepted deliverable requires fresh-context verification per EC-3: the producer never accepts its own work, and Levi is never the sole acceptor of an intermediate artifact.
+
+### Agent Teams Mode (secondary — do not use until preconditions are met)
+
+Agent Teams mode (each agent an independent Claude Code instance with shared task lists and direct messaging) remains documented as a secondary option. Preconditions before switching to it:
+
 - `.claude/settings.json` sets `env.CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS = "1"` and `teammateMode = "in-process"` (already configured)
-- Launch via `/boss` — the entry-point skill spawns Levi
+- Every agent .md gains a File Ownership section declaring the directories it owns (currently absent — mandatory for Agent Teams operation)
+- Scoped worklog/output write permissions stay in `settings.json` — teammates cannot answer permission prompts
 
-### Known Limitations (Agent Teams)
+#### Known Limitations (Agent Teams)
 
 - No `/resume` recovery for teammates — if a teammate's session ends, work resumes via worklog only
 - Fixed lead per session — Levi is the coordinator and cannot be reassigned mid-session
@@ -37,19 +45,13 @@ Prerequisites:
 - No split-pane support in VS Code, Windows Terminal, or Ghostty — use a standard terminal for full visibility
 - Teammates cannot share authentication — each teammate signs in independently if external services are required
 
-### Communication Topology
+#### Communication Topology (Agent Teams)
 
 - **Coordinator-mediated**: All task assignments and phase transitions go through Levi.
 - **Peer-to-peer in Phase 4 only**: Eren and Armin exchange arguments directly during the multi-round debate phase. Levi moderates and determines when the debate concludes.
 - **Handoff protocol**: When an agent completes its deliverable, it marks the task as completed via `TaskUpdate` and sends a summary message to Levi.
 
-### Subagent Mode (Alternative)
-
-This team also supports **subagent mode** where Levi orchestrates all agents via the Task tool within a single session. In subagent mode:
-- Debate rounds use file-based turn-taking (`round-N-eren-*.md` / `round-N-armin-*.md`) instead of direct messaging.
-- All other communication flows through Levi's task delegation.
-
-### Task List Coordination
+#### Task List Coordination (Agent Teams)
 
 All agents share a single task list managed by Levi. Agents must:
 1. Check `TaskList` after completing each task to find available work.
@@ -122,19 +124,47 @@ Every task dispatch from Levi must include:
 1. **Worklog path** — The directory where the agent writes outputs.
 2. **Upstream reference paths** — Paths to relevant upstream phase worklogs.
 3. **Task scope summary** — Concise description of what the task must accomplish.
+4. **Acceptance criteria** — 1–5 mechanically checkable conditions; a fresh-context verifier checks exactly these per `rules/execution-contract.md` EC-3.
+5. **Scope fence** — an explicit OUT list of files and directories the agent must not touch.
 
 Wrap variable data in XML tags to separate data from instructions.
 
 ### Agent Return Format
 
-Every agent returns a structured summary upon task completion with one of these statuses:
-- **DONE** — All steps completed successfully.
-- **DONE_WITH_CONCERNS** — Completed with issues. List each concern.
-- **BLOCKED** — Cannot proceed. State what was attempted and what is needed.
-- **NEEDS_CONTEXT** — Missing information. List each missing item.
+Every task return follows the six-field schema in `rules/execution-contract.md` EC-1, in this order:
+
+1. `STATUS:` DONE | DONE_WITH_CONCERNS | BLOCKED | NEEDS_CONTEXT
+2. `CONCLUSIONS:` outcomes and decisions, max 10 lines
+3. `EVIDENCE:` file:line pointers or command outputs proving each conclusion — `STATUS: DONE` with empty EVIDENCE is invalid
+4. `ARTIFACTS:` paths to every file produced or updated, including worklog files
+5. `RISKS/UNKNOWNS:` issues Levi must know; "none" when none exist
+6. `NEXT:` exactly one recommendation
 
 Full detail goes to the worklog; only the summary returns to Levi.
 
-### Phase-End Archival
+### Verification and Phase-End Archival
 
-Levi verifies worklog completeness before each phase transition. Subsequent phases read from the worklog, not from prior context.
+Levi accepts a deliverable only after a fresh-context verifier (a separate dispatch that receives only the acceptance criteria and artifact paths) returns per-criterion PASS — the producer's own DONE claim never counts as acceptance (EC-3). Levi verifies worklog completeness before each phase transition. Subsequent phases read from the worklog, not from prior context.
+
+## Precedence Order
+
+When two instructions conflict, the higher source wins (adapted from `rules/execution-contract.md` EC-4). Resolve by citing this order:
+
+1. Safety: `settings.json` deny rules and destructive-action guards
+2. Charter: this CLAUDE.md and `rules/execution-contract.md`
+3. EC-3 verification requirements
+4. EC-1 reporting requirements
+5. EC-2 escalation requirements
+6. Other rules in `rules/`
+7. Task-specific dispatch instructions
+8. Style preferences (tone, formatting, length aesthetics)
+
+## Runtime Authority
+
+- **Claude Code sessions**: this `CLAUDE.md` + `.claude/` are the authoritative runtime surface.
+- **Codex sessions**: `AGENTS.md` + `.codex/` + root `agents/` + `.agents/skills/` are the authoritative runtime surface.
+- Neither tree is "legacy" — they are parallel platform implementations of the same team. Policy changes land in `.claude/` first, then mirror to `.codex/` per the AGENTS.md migration notes.
+
+---
+
+Generated by A-Team on 2026-04 (pre-hardening) · Retrofitted by A-Team (Phase 7 restructuring) on 2026-07-03

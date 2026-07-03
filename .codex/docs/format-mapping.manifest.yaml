@@ -1,0 +1,68 @@
+spec_version: 1
+supported_directions:
+  - claude_to_codex
+  - codex_to_claude
+canonical_roots:
+  codex_runtime:
+    - "AGENTS.md"
+    - ".codex"
+    - "agents"
+    - ".agents"
+  claude_legacy:
+    - "CLAUDE.md"
+    - ".claude"
+default_policies:
+  canonical_runtime: codex
+  preserve_legacy_claude: true
+  lossy_transform: document_in_audit
+artifacts:
+  - id: root-project-doc
+    kind: project_doc
+    source: "CLAUDE.md"
+    targets:
+      - "AGENTS.md"
+    relation: "1:1"
+    transform_mode: adapted
+    lossy: false
+  - id: codex-runtime-config
+    kind: runtime_config
+    source: ".claude/settings.json"
+    targets:
+      - ".codex/config.toml"
+      - ".codex/hooks.json"
+      - ".codex/rules/codex-runtime-config.md"
+    relation: "1:many"
+    transform_mode: adapted
+    lossy: true
+    notes: "Claude permissions and Agent Teams are host-runtime concepts in Codex."
+  - id: agent-playbooks
+    kind: agent_config
+    source: ".claude/agents/**/*.md"
+    targets:
+      - ".codex/agents/**/*.md"
+      - "agents/**/*.toml"
+    relation: "1:2"
+    transform_mode: adapted
+    lossy: false
+  - id: rules
+    kind: rules
+    source: ".claude/rules/*.md"
+    targets:
+      - ".codex/rules/*.md"
+    relation: "1:1"
+    transform_mode: adapted
+    lossy: false
+  - id: skills
+    kind: skills
+    source: ".claude/skills/*"
+    targets:
+      - ".codex/skills/*"
+      - ".agents/skills/*"
+    relation: "1:2"
+    transform_mode: adapted
+    lossy: false
+validation:
+  - ".codex/config.toml must parse as TOML"
+  - "Each registered config_file must resolve from .codex/config.toml"
+  - "Each runtime agent TOML must contain developer_instructions"
+  - "survey-corps skill must exist in .codex/skills and .agents/skills"

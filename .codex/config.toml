@@ -1,0 +1,59 @@
+# Project defaults for the Survey Corps Codex runtime.
+# The legacy Claude implementation remains under `.claude/`.
+
+model = "gpt-5.5"
+model_reasoning_effort = "xhigh"
+personality = "pragmatic"
+sandbox_mode = "workspace-write"
+approval_policy = "on-request"
+project_doc_max_bytes = 65536
+project_doc_fallback_filenames = ["AGENTS.md", "CLAUDE.md"]
+tool_output_token_limit = 30000
+
+[features]
+multi_agent = true
+
+[agents]
+max_depth = 1
+max_threads = 6
+job_max_runtime_seconds = 7200
+
+[agents.levi]
+description = "Coordinate Survey Corps intake, phase gates, delegation, debate moderation, revision routing, and delivery."
+config_file = "../agents/levi.toml"
+
+[agents.hange]
+description = "Lead investigator for assigned market research dimensions and verified Evidence Dossiers."
+config_file = "../agents/research/hange.toml"
+
+[agents.moblit]
+description = "Second investigator for complementary market research dimensions and verified Evidence Dossiers."
+config_file = "../agents/research/moblit.toml"
+
+[agents.eren]
+description = "Affirmative feasibility debate analyst."
+config_file = "../agents/analysis/eren.toml"
+
+[agents.armin]
+description = "Skeptic feasibility debate analyst."
+config_file = "../agents/analysis/armin.toml"
+
+[agents.mikasa]
+description = "Technical feasibility assessor and implementation risk analyst."
+config_file = "../agents/analysis/mikasa.toml"
+
+[agents.petra]
+description = "Quality inspector for evidence, debate, technical assessment, and report readiness."
+config_file = "../agents/output/petra.toml"
+
+[agents.historia]
+description = "Final report producer for HTML, PPTX, PDF, and DOCX deliverables."
+config_file = "../agents/output/historia.toml"
+
+[agents.erwin]
+description = "Post-project process reviewer for workflow adherence and improvement recommendations."
+config_file = "../agents/review/erwin.toml"
+
+[tui]
+terminal_title = ["spinner", "project"]
+status_line = ["model-with-reasoning", "context-remaining", "git-branch", "current-dir"]
